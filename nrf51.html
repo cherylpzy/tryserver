@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Patient Status</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+<style type="text/css">
+.rate{
+color:#ff8000;
+	animation-name: blink;
+    animation-duration: 1s;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	text-shadow: 1px 1px 2px #ff4000;
+	font-size: 35px;
+}
+
+@keyframes blink {
+    from {color: white;}
+    to {color: #e6b800;}
+}
+
+
+body {
+
+	height: 1080px;
+     background-color:white; 
+	 
+} 
+
+
+table {
+
+	width: 100%;
+     border-collapse: collapse;
+	 border-style: groove;
+	 background-color:lavender;
+ }
+
+table, th, td {
+    text-align: center;
+	font-size: 24px;
+
+ }
+
+td{
+	font-size: 35px;
+}
+ 
+th {
+    background-color:#333333;
+    color: white;
+	font-size: 40px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th, td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;}
+	
+.pic {
+    float: left;
+    padding: 10px 0px 10px 10px;
+	margin:0px;
+	animation-name: turn;
+    animation-duration: 2s;
+	animation-iteration-count: infinite;
+	animation-direction: alternate; 
+}
+
+<!-- @keyframes turn {
+    from {transform: rotateY(0deg);}
+    to {transform: rotateY(150deg);}
+} -->
+
+
+
+h1{
+	
+	font-size:85px;
+	 color:white;
+	 font-family: Helvetica;
+	 text-align:center;
+	 margin: 0px;
+	 background-color: rgba(56,147,255,.95); 
+	 padding:0px;
+	 box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.scroll{
+	
+	background-color: #000066;
+	overflow:hidden;
+	color: white;
+	width: 100%;
+	margin: 0px;
+	padding:0px;
+}
+
+h2{
+	font-size:50px;
+	text-align:center;
+	 margin: 0px;
+	padding:0px;
+	 transform:transformX(-100%);
+	 animation: scroll-right 15s linear infinite;
+	 	
+}
+
+@keyframes scroll-right {
+
+	0%   { 
+			transform: translateX(-100%); 		
+		}
+ 
+	100% { 
+ 
+		transform: translateX(100%); 
+		}
+}
+
+h3{
+	font-size:30px;
+	animation-name: transZ;
+    animation-duration: 8s;
+	animation-iteration-count: infinite;
+	margin:0px;
+	
+	
+}
+
+@keyframes transZ {
+     from {transform: rotateY(0deg);}
+    to {transform: rotateY(360deg);}
+}
+
+h4{
+	color: #993300;
+	font-size:23px;
+	text-shadow: 1px 1px 2px white;
+	margin:0px;
+}
+
+
+
+h5{
+	color: #00ccff;
+	font-size:23px;
+	text-shadow: 1px 1px 2px white;
+	margin:0px;
+}
+
+
+.aside {
+	
+	background-color:#ffffcc;
+	padding:10px;
+    text-align: center;
+    font-size: 20px;
+    box-shadow: 2px 2px 4px #ffcc00, 2px 2px 3px #665200;
+}
+
+
+
+@media only screen and (min-width: 768px) {
+    
+    
+    .col-2 {width: 100%;}
+    
+}
+
+.row:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+[class*="col-"] {
+    float: left;
+    padding: 10px 1px 10px 1px;
+	margin:2px;
+	}
+
+	
+.slide{
+	margin-top:10px;
+}
+
+
+div.clear{
+        clear: both;
+    }
+    ul.devices{
+        margin: 0;
+        padding: 0;
+    }
+    ul.devices li{
+	
+		background-color:white;
+        float: left;
+        list-style: none;
+        border: 1px solid #dedede;
+        padding: 10px;
+        margin: 0 15px 25px 0;
+        border-radius: 3px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        color: #555;
+		height: 100px;
+        width: 400px;
+    }
+    ul.devices li label, ul.devices li span{
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 20px;
+        font-weight: bold;
+        color: #393939;
+        display: block;
+        float: left;
+    }
+    ul.devices li label{
+        height: 25px;
+        width: 50px;
+		padding: 0 20px 0 0;
+    }
+	
+	ul.devices li span{
+		padding: 0 0 0 20px;
+	}
+
+	</style>
+</head>
+<body>
+
+<h1><img class="pic" src="perkeso.jpg" height="180" width="180">Pusat Rehabilitasi PERKESO</h1>
+
+
+
+
+
+	
+	<!-- <button>Remove refer to class</button> -->
+<div class="col-2" id="id01"></div>
+
+
+
+
+
+<script>
+
+
+var socket = io('http://localhost:30000');
+
+socket.on('reply', function(data){
+
+    var string=JSON.stringify(data);
+		var arr =  JSON.parse(string);
+		var out= "<div style='overflow-x:auto;'><table><tr><th>Bio-signal Data Collection</th>></tr>";
+		var i;
+				
+		function test1(km){
+
+	if(km>=0 && km<2)return "&#x2605";
+	else if(km>=2 && km<3)return "&#x2605&#x2605";
+	else if(km>=3 && km<4)return "&#x2605&#x2605&#x2605";
+	else if(km>=4 && km<5)return "&#x2605&#x2605&#x2605&#x2605";
+	else if(km>=5)return "&#x2605&#x2605&#x2605&#x2605&#x2605";
+	else if (km == 0)return "No Record";
+
+		}
+			
+		for(i = 0; i < arr.length; i++) {
+        out += '<div class="col-1"><ul class="devices"><li><div class="clear"></div><label>' 
+		+"Name: "
+		+'</label><span>'
+        +arr[i].Name 
+        +'</span><div class="clear"></div><label>'
+		+"Mileage: "
+		+'</label><span>'
+        +arr[i].Mileage 
+        +'</span><div class="clear"></div><label>'
+		+"Rate: "
+		+'</label><span>'
+        +test1(arr[i].Mileage) 
+		+'</span></li></ul></div>';
+    }
+    document.getElementById("id01").innerHTML = out;
+
+	});
+
+
+
+
+function myFunction(response) {
+    var arr = JSON.parse(response);
+    var i;
+    var out = "";
+
+    for(i = 0; i < arr.length; i++) {
+        out += '<div class="col-1"><ul class="devices"><li><div class="clear"></div><label>' 
+		+"Name: "
+		+'</label><span>'
+        +arr[i].Name 
+        +'</span><div class="clear"></div><label>'
+		+"Id: "
+		+'</label><span>'
+        +arr[i].City 
+        +'</span><div class="clear"></div><label>'
+		+"Mileage: "
+		+'</label><span>'
+        +arr[i].Country 
+		+'</span></li></ul></div>';
+    }
+    document.getElementById("id01").innerHTML = out;
+}
+	var socket1 = io('http://localhost:8080');
+	var array = [];
+
+	socket1.on('H7', function (data){
+		console.log("Received: " +data);
+		console.log("Data Type : " +jQuery.type(data));
+		var change = Number(data);
+		console.log("Changed Type: " +jQuery.type(change));
+		array.push(change);
+		//console.log("Array: " +array);
+		console.log("Array size: " +array.length);
+	});
+
+	
+
+	window.onload = function () {
+		var dataPoints = [{y : array}];
+		var chart = new CanvasJS.Chart("chartContainer", {
+			title : {text : "Heart Rate (Jara)"},
+			data : [{type : "spline", dataPoints : dataPoints}]
+		});
+
+		chart.render();
+		
+
+			var updateCount = 1;
+			var updateChart = function () {
+				dataPoints.push({y : array[array.length -1]});
+					chart.options.title.text = ("Heart Rate (Jara)");
+					chart.render();
+					updateCount++;
+			};
+
+		setInterval(function(){updateChart()}, 1000);	//update chart every second	
+	}
+
+
+</script>
+<div id = "space" style = "height: 400px; width: 85%;" ></div>
+<div id = "chartContainer" style = "height: 500px; width: 95%;" ></div>
+</body>
+</html>
