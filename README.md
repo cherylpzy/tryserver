@@ -1,1 +1,1 @@
-This is a code to be reposited to the Microsoft Azure that acts as a server.
+This is a node.js code to be reposited to the Microsoft Azure that acts as a server.
